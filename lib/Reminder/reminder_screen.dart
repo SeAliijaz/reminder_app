@@ -158,9 +158,11 @@ class _ReminderScreenState extends State<ReminderScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context).push(
+              Navigator.push(
+                context,
                 MaterialPageRoute(
-                    builder: (context) => const DetailsScreen(payload: null)),
+                  builder: (context) => DetailsScreen(payload: null),
+                ),
               );
             },
             icon: const Icon(
@@ -188,7 +190,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
               padding: const EdgeInsets.all(24.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                // mainAxisSize: MainAxisSize.min,
                 children: [
                   const Header(),
                   TextFormField(
@@ -244,7 +245,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                       await cancelAllNotifications();
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('All notfications cancelled'),
+                          content: Text('All notifications cancelled'),
                         ),
                       );
                     },

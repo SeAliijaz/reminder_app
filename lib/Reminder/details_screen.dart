@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class DetailsScreen extends StatefulWidget {
+  final String? payload;
+
   const DetailsScreen({
     Key? key,
     required this.payload,
   }) : super(key: key);
-  final String? payload;
 
   @override
   State<DetailsScreen> createState() => _DetailsScreenState();
@@ -16,17 +18,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
   late Map<String, dynamic> decodedData;
 
   @override
+  @override
   void initState() {
     super.initState();
-    if (widget.payload != null) {
-      try {
-        decodedData = jsonDecode(widget.payload!) as Map<String, dynamic>;
-      } catch (e) {
-        decodedData = {};
-      }
-    } else {
-      decodedData = {};
-    }
+    decodedData = widget.payload != null
+        ? jsonDecode(widget.payload!) as Map<String, dynamic>
+        : {};
   }
 
   @override
@@ -60,8 +57,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
   Widget _buildNotifiedReminderCard() {
     final title = decodedData["title"].toString();
-    final eventDate = decodedData["eventDate"].toString();
-    final eventTime = decodedData["eventTime"].toString();
+    final eventDate = DateTime.parse(decodedData["eventDate"].toString());
+    final eventTime = TimeOfDay.fromDateTime(
+        DateTime.parse(decodedData["eventTime"].toString()));
+
     return Card(
       elevation: 5,
       shadowColor: Colors.grey.withOpacity(0.2),
@@ -93,7 +92,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
             ),
             SizedBox(height: 12.0),
             Text(
-              eventDate,
+              DateFormat.yMMMMd().format(eventDate),
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.w500,
@@ -107,7 +106,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 Icon(Icons.access_time),
                 SizedBox(width: 8.0),
                 Text(
-                  eventTime,
+                  eventTime.format(context),
                   style: TextStyle(
                     fontSize: 18.0,
                     color: Colors.black87,

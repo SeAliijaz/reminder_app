@@ -15,4 +15,9 @@
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">?android:colorBackground</item>
     </style>
+
+    <!-- Place the sound file you want to use for notifications (in this case, "a_long_cold_sting") inside the raw directory. Make sure the file name is correct and that it has the proper file extension (e.g., ".mp3", ".wav"). -->
+    <string name="default_notification_sound">
+        a_long_cold_sting
+    </string>
 </resources>

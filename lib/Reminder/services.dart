@@ -3,7 +3,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:reminder_app/Constants/constants.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-
 import 'details_screen.dart';
 
 class NotificationService {
@@ -34,32 +33,20 @@ class NotificationService {
     sound: RawResourceAndroidNotificationSound("a_long_cold_sting"),
   );
 
-  // static final IOSNotificationDetails _iOSNotificationDetails =
-  //     IOSNotificationDetails();
-
   final NotificationDetails notificationDetails = NotificationDetails(
     android: _androidNotificationDetails,
-    // iOS: _iOSNotificationDetails,
   );
 
   Future<void> initReminder() async {
     final AndroidInitializationSettings androidInitializationSettings =
         AndroidInitializationSettings("ic_launcher");
 
-    // final IOSInitializationSettings iOSInitializationSettings =
-    //     IOSInitializationSettings(
-    //   defaultPresentAlert: false,
-    //   defaultPresentBadge: false,
-    //   defaultPresentSound: false,
-    // );
-
     final InitializationSettings initializationSettings =
         InitializationSettings(
       android: androidInitializationSettings,
-      // iOS: iOSInitializationSettings,
     );
 
-    // *** Initialize timezone here ***
+    // Initialize timezone
     tz.initializeTimeZones();
 
     await flutterLocalNotificationsPlugin.initialize(
@@ -67,17 +54,6 @@ class NotificationService {
       onSelectNotification: onSelectNotification,
     );
   }
-
-  // Future<void> requestIOSPermissions() async {
-  //   await flutterLocalNotificationsPlugin
-  //       .resolvePlatformSpecificImplementation<
-  //           IOSFlutterLocalNotificationsPlugin>()
-  //       ?.requestPermissions(
-  //         alert: true,
-  //         badge: true,
-  //         sound: true,
-  //       );
-  // }
 
   Future<void> requestAndroidPermissions() async {
     flutterLocalNotificationsPlugin
@@ -88,13 +64,8 @@ class NotificationService {
 
   Future<void> showNotification(
       int id, String title, String body, String payload) async {
-    await flutterLocalNotificationsPlugin.show(
-      id,
-      title,
-      body,
-      notificationDetails,
-      payload: payload,
-    );
+    await flutterLocalNotificationsPlugin
+        .show(id, title, body, notificationDetails, payload: payload);
   }
 
   Future<void> scheduleNotification(int id, String title, String body,
@@ -104,18 +75,13 @@ class NotificationService {
       hours: eventTime.hour,
       minutes: eventTime.minute,
     ));
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      id,
-      title,
-      body,
-      tz.TZDateTime.from(scheduledTime, tz.local),
-      notificationDetails,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      androidAllowWhileIdle: true,
-      payload: payload,
-      matchDateTimeComponents: dateTimeComponents,
-    );
+    await flutterLocalNotificationsPlugin.zonedSchedule(id, title, body,
+        tz.TZDateTime.from(scheduledTime, tz.local), notificationDetails,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        androidAllowWhileIdle: true,
+        payload: payload,
+        matchDateTimeComponents: dateTimeComponents);
   }
 
   Future<void> cancelNotification(int id) async {
@@ -128,10 +94,11 @@ class NotificationService {
 }
 
 Future<void> onSelectNotification(String? payload) async {
-  await navigatorKey.currentState!.push(MaterialPageRoute(builder: (_) {
-    return DetailsScreen(payload: payload!
-        // body: '',
-        // title: '',
-        );
-  }));
+  await navigatorKey.currentState!.push(
+    MaterialPageRoute(
+      builder: (_) {
+        return DetailsScreen(payload: payload);
+      },
+    ),
+  );
 }
